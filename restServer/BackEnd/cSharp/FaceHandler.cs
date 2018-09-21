@@ -11,6 +11,7 @@ using System.Threading;
 using FaceDetection;
 using Informations;
 using Newtonsoft.Json;
+using Database;
 
 public class ThreadParam {
     public byte[] Photo { get; set; }

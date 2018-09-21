@@ -7,13 +7,12 @@ using System;
 namespace Presence {
     public class PresenceHandler {
         public bool ValidatePresence(JsonInformations informations) {
-
-            Location location = new Location(informations.Latitude, informations.Longitude, informations.Accuracy);
-            location.CheckCoordinate();
-
-            Face face = new Face(informations.Photo);
-            
             try {
+                Location location = new Location(informations.Latitude, informations.Longitude, informations.Accuracy);
+                location.CheckCoordinate();
+
+                Face face = new Face(informations.Photo);
+                
                 /*
                 if(face.IsPhotoOfPhoto(informations.Photo1, informations.Photo2)) {
                     ResponseInfo response = new ResponseInfo {
