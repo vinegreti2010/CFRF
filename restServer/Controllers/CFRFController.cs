@@ -39,7 +39,7 @@ namespace restServer.Controllers {
         }*/
 
         [HttpPost]
-        public string ReceiveInformations(JsonInformations informations) {
+        public string ReceiveInformations([FromBody] JsonInformations informations) {
             ResponseInfo response = new ResponseInfo();
             if(informations != null) {
                 PresenceHandler presence = new PresenceHandler();

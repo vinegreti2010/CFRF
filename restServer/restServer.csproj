@@ -52,21 +52,6 @@
     <Reference Include="Emgu.CV.World, Version=3.4.1.2976, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EMGU.CV.3.4.1.2976\lib\net35\Emgu.CV.World.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.SQLite, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Wpf, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPythonConsole, Version=1.1.4.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\IronPythonConsole.1.1.4.0\lib\net40\IronPythonConsole.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
@@ -92,11 +77,11 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PythonConsoleControl, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPythonConsole.1.1.4.0\lib\net40\PythonConsoleControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlClient, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.5.1\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -231,17 +216,18 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="BackEnd\cSharp\DataBaseHandler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CFRFController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BackEnd\FaceDetection.cs" />
-    <Compile Include="BackEnd\FaceHandler.cs" />
-    <Compile Include="BackEnd\Informations.cs" />
-    <Compile Include="BackEnd\LocationHandler.cs" />
-    <Compile Include="BackEnd\PresenceHandler.cs" />
+    <Compile Include="BackEnd\cSharp\FaceDetection.cs" />
+    <Compile Include="BackEnd\cSharp\FaceHandler.cs" />
+    <Compile Include="BackEnd\cSharp\Informations.cs" />
+    <Compile Include="BackEnd\cSharp\LocationHandler.cs" />
+    <Compile Include="BackEnd\cSharp\PresenceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -249,30 +235,32 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="facematch\images\amitab_old.jpg" />
-    <Content Include="facematch\images\amitab_young.jpg" />
-    <Content Include="facematch\images\angelina-jolie-young.jpg" />
-    <Content Include="facematch\images\Angelina_jolie.jpg" />
-    <Content Include="facematch\images\Barack_Obama.jpg" />
-    <Content Include="facematch\images\daniel-radcliffe.jpg" />
-    <Content Include="facematch\images\daniel-radcliffe_2.jpg" />
-    <Content Include="facematch\images\daniel-radcliffe_3.jpg" />
-    <Content Include="facematch\images\daniel-radcliffe_4.jpg" />
-    <Content Include="facematch\images\daniel-radcliffe_5.jpg" />
-    <Content Include="facematch\images\dicaprio-the-revenant.jpg" />
-    <Content Include="facematch\images\dicaprio-the-titanic.jpg" />
-    <Content Include="facematch\images\Esha-gupta.jpg" />
-    <Content Include="facematch\images\faces.jpg" />
-    <Content Include="facematch\images\IlhamAnas.jpg" />
-    <Content Include="facematch\images\rafael1.jpg" />
-    <Content Include="facematch\images\rafael2.jpg" />
-    <Content Include="facematch\images\tmpImage1.jpg" />
-    <Content Include="facematch\images\tmpImage2.jpg" />
-    <Content Include="facematch\requirements.txt" />
+    <Content Include="BackEnd\Python\Facenet\haarcascades\haarcascade_eye.xml" />
+    <Content Include="BackEnd\Python\Facenet\haarcascades\haarcascade_frontalface_default.xml" />
+    <Content Include="BackEnd\Python\Facenet\images\amitab_old.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\amitab_young.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\angelina-jolie-young.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\Angelina_jolie.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\Barack_Obama.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_2.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_3.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_4.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_5.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\dicaprio-the-revenant.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\dicaprio-the-titanic.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\Esha-gupta.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\faces.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\IlhamAnas.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\rafael1.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\rafael2.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\tmpImage1.jpg" />
+    <Content Include="BackEnd\Python\Facenet\images\tmpImage2.jpg" />
+    <Content Include="BackEnd\Python\Facenet\requirements.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="ImagesTcc\BaseImage.jpg" />
+    <Content Include="Images\BaseImage.jpg" />
     <Content Include="License-LGPL.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -298,22 +286,19 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Connected Services\AzureStorage1\ConnectedService.json" />
-    <Content Include="IronPythonConsole.py" />
-    <Content Include="facematch\.gitignore" />
-    <Content Include="facematch\align\det1.npy" />
-    <Content Include="facematch\align\det2.npy" />
-    <Content Include="facematch\align\det3.npy" />
-    <Content Include="facematch\align\detect_face.py" />
-    <Content Include="facematch\align\__pycache__\detect_face.cpython-36.pyc" />
-    <Content Include="facematch\facenet.py" />
-    <Content Include="facematch\face_detect_demo.py" />
-    <Content Include="facematch\face_embeddings_demo.py" />
-    <Content Include="facematch\face_match_demo.py" />
-    <Content Include="facematch\models\20170512-110547.pb" />
-    <Content Include="facematch\README.md" />
-    <Content Include="facematch\__pycache__\facenet.cpython-36.pyc" />
-    <Content Include="facematch\face_match.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\align\det1.npy" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\align\det2.npy" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\align\det3.npy" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\align\detect_face.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\align\__pycache__\detect_face.cpython-36.pyc" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\facenet.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\face_embeddings_demo.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\face_match_demo.py" />
+    <Content Include="BackEnd\Python\Facenet\models\20170512-110547.pb" />
+    <Content Include="BackEnd\Python\Facenet\__pycache__\facenet.cpython-36.pyc" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\face_match.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\face_detect_demo.py" />
+    <Content Include="BackEnd\Python\Facenet\pythonCodes\face_match_demo_bkp.py" />
     <None Include="Properties\PublishProfiles\CFRF - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

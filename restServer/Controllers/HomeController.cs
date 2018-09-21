@@ -11,11 +11,5 @@ namespace restServer.Controllers {
 
             return View();
         }
-
-        public ActionResult About() {
-            string currentTime = DateTime.Now.ToLongTimeString();
-            ViewBag.Message = "The current time is " + currentTime;
-            return View();
-        }
     }
 }

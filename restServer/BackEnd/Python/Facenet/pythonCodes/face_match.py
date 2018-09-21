@@ -8,6 +8,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--img1", type = str, required=True)
 parser.add_argument("--img2", type = str, required=True)
+parser.add_argument("--img3", type = str, required=True)
+parser.add_argument("--img4", type = str, required=True)
 args = parser.parse_args()
 
 # some constants kept as default from facenet
@@ -20,12 +22,10 @@ input_image_size = 160
 sess = tf.Session()
 
 # read pnet, rnet, onet models from align directory and files are det1.npy, det2.npy, det3.npy
-#pnet, rnet, onet = detect_face.create_mtcnn(sess, 'D:/home/site/wwwroot/facematch/align')
-pnet, rnet, onet = detect_face.create_mtcnn(sess, 'C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/facematch/align')
+pnet, rnet, onet = detect_face.create_mtcnn(sess, 'D:/home/site/wwwroot/BackEnd/Python/Facenet/pythonCodes/align')
 
 # read 20170512-110547 model file downloaded from https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk
-#facenet.load_model("D:/home/site/wwwroot/facematch/models/20170512-110547.pb")
-facenet.load_model("C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/facematch/models/20170512-110547.pb")
+facenet.load_model("D:/home/site/wwwroot/BackEnd/Python/Facenet/models/20170512-110547.pb")
 
 # Get input and output tensors
 images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
@@ -51,26 +51,42 @@ def getFace(img):
                 prewhitened = facenet.prewhiten(resized)
                 faces.append({'face':resized,'rect':[bb[0],bb[1],bb[2],bb[3]],'embedding':getEmbedding(prewhitened)})
     return faces
+
 def getEmbedding(resized):
     reshaped = resized.reshape(-1,input_image_size,input_image_size,3)
     feed_dict = {images_placeholder: reshaped, phase_train_placeholder: False}
     embedding = sess.run(embeddings, feed_dict=feed_dict)
     return embedding
 
-def compare2face(img1,img2):
-    face1 = getFace(img1)
-    face2 = getFace(img2)
+def compare2face(face1,face2):
     if face1 and face2:
         # calculate Euclidean distance
         dist = np.sqrt(np.sum(np.square(np.subtract(face1[0]['embedding'], face2[0]['embedding']))))
         return dist
     return -1
 
-
+def isPhotoOfPhoto(face1, face2, face3):
+	if face1 and face2 and face3:
+		if np.array_equal(face1[0], face2[0]) and np.array_equal(face1[0], face3[0]):
+			return -2
+		else:
+			return 0
+	else:
+		return -1
+		
 img1 = cv2.imread(args.img1)
 img2 = cv2.imread(args.img2)
-distance = compare2face(img1, img2)
-threshold = 1.10    # set yourself to meet your requirement
-#print("distance = "+str(distance))
-#print("Result = " + ("same person" if distance <= threshold else "not same person"))
-print(str(distance))
+img3 = cv2.imread(args.img3)
+img4 = cv2.imread(args.img4)
+
+face1 = getFace(img1)
+face2 = getFace(img2)
+face3 = getFace(img3)
+face4 = getFace(img4)
+
+photoOfPhoto = isPhotoOfPhoto(face2, face3, face4)
+if photoOfPhoto == 0:
+	distance = compare2face(face1, face2)
+	print(str(distance))
+else:
+	print(str(photoOfPhoto))

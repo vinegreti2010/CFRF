@@ -30,11 +30,25 @@ namespace FaceHandler {
         List<Bitmap> croppedFaces;
         List<Bitmap> croppedFaces1;
         int AdjustBright;
-        //string path = "C:\\Users\\Administrador\\Documents\\Visual Studio 2017\\Projects\\restServer\\restServer\\";
-        //string path = "C:\\Users\\Administrador\\Desktop\\ImagesTcc\\";
-        //string path = "C:/Users/Administrador/Desktop/ImagesTcc/";
-		string path = "D:/home/site/wwwroot/ImagesTcc/";
-		
+
+        /********************************************************************************
+        *                                Local Debug                                    *
+        ********************************************************************************/
+        /*string imagesPath = "C:/Users/Administrador/Desktop/ImagesTcc/";
+        string haarcascadePath = "C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/BackEnd/Python/Facenet/haarcascades/";
+        string faceNetExec = "C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/BackEnd/Python/Facenet/pythonCodes/face_match_demo.py";
+        string pythonPath = "C:/Python36/python.exe";
+        string callMatch = " \"{0}\" --img1={1} --img2={2} --img3={3} --img4={4}";*/
+
+        /********************************************************************************
+        *                               Azure Server                                    *
+        ********************************************************************************/
+        string imagesPath = "D:/home/site/wwwroot/Images/";
+        string haarcascadePath = "D:/home/site/wwwroot/BackEnd/Python/Facenet/haarcascades/";
+        string faceNetExec = "D:/home/site/wwwroot/BackEnd/Python/Facenet/pythonCodes/face_match.py";
+        string pythonPath = "D:/home/python364x64/python.exe";
+        string callMatch = "{0} --img1={1} --img2={2} --img3={3} --img4={4}";
+
         public Face(byte[] photo) {
             ListOfFaces = new List<Bitmap>();
             MemoryStream memoryStream = new MemoryStream(photo);
@@ -45,27 +59,68 @@ namespace FaceHandler {
             if(AdjustBright > 0)
                 image = AdjustBrightness(image, (int)(AdjustBright / 3f));
 
-            List<Bitmap> faces = CropFace(image, 0);
+            SaveImage(image, imagesPath + "tmpImage" + 0);
+            /*List<Bitmap> faces = CropFace(image, 0, false);
 
             if(faces != null) {
                 for(int i = 0; i < faces.Count; i++) {
                     ListOfFaces.Add(faces[i]);
                 }
-            }
+            }*/
         }
 
-        public bool CheckFace() {
-            string result = CompareFaces("D:/home/site/wwwroot/facematch/face_match.py", path + "BaseImage.jpg", path + "tmpImage0.jpg");
-            //string result = CompareFaces("C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/facematch/face_match_demo.py", path + "BaseImage.jpg", path + "tmpImage0.jpg");
+        public bool CheckFace(byte[] photo, byte[] photo1) {
+            float distance = -2;
+            ResponseInfo response;
 
-            string[] results = result.Split(' ');
+            Thread t1 = new Thread(new ParameterizedThreadStart(ThreadAdjsutImage));
+            t1.Name = "Photos 1";
+            ThreadParam param = new ThreadParam(photo, 1, AdjustBright);
+            t1.Start(param);
 
-            float distance = float.Parse(results[0]);
+            Thread t2 = new Thread(new ParameterizedThreadStart(ThreadAdjsutImage));
+            t2.Name = "Photos 2";
+            param = new ThreadParam(photo1, 2, AdjustBright);
+            t2.Start(param);
 
-            if (distance <= 1.1f)
-                return true;
+            t1.Join();
+            t2.Join();
 
-            return false;
+            try {
+                string result = CompareFaces(faceNetExec, imagesPath + "BaseImage.jpg", imagesPath + "tmpImage0.jpg", imagesPath + "tmpImage1.jpg", imagesPath + "tmpImage2.jpg");
+
+                string[] results = result.Split(' ');
+
+                distance = float.Parse(results[0]);
+                
+                if(distance <= 1.1f)
+                    return true;
+
+                return false;
+            } catch {
+                if(distance == -1f) {
+                    response = new ResponseInfo {
+                        code = "3",
+                        header = "Erro",
+                        message = "Não foi possível detectar sua face, por favor tente novamente"
+                    };
+                    throw new Exception(JsonConvert.SerializeObject(response));
+                } else if(distance == -2f) {
+                    response = new ResponseInfo {
+                        code = "4",
+                        header = "Erro",
+                        message = "Desculpe, não é possível validar presença com foto de outra foto"
+                    };
+                    throw new Exception(JsonConvert.SerializeObject(response));
+                }
+
+                response = new ResponseInfo {
+                    code = "7",
+                    header = "Erro",
+                    message = "Erro ao carregar arquivos para o reconhecimento"
+                };
+                throw new Exception(JsonConvert.SerializeObject(response));
+            }
         }
 
         public bool IsPhotoOfPhoto(byte[] photo, byte[] photo1) {
@@ -107,12 +162,18 @@ namespace FaceHandler {
             Image image = Bitmap.FromStream(memoryStream);
             image = ToPortrait(image);
             if(threadParam.Adjust > 0)
-                image = AdjustBrightness(image, (int)(threadParam.Adjust/3f));
+                image = AdjustBrightness(image, (int)(threadParam.Adjust / 3f));
+
             if(threadParam.Index == 1) {
-                croppedFaces = CropFace(image, threadParam.Index);
+                SaveImage(image, imagesPath + "tmpImage" + threadParam.Index);
             } else if(threadParam.Index == 2) {
-                croppedFaces1 = CropFace(image, threadParam.Index);
+                SaveImage(image, imagesPath + "tmpImage" + threadParam.Index);
             }
+            /*if(threadParam.Index == 1) {
+                croppedFaces = CropFace(image, threadParam.Index, true);
+            } else if(threadParam.Index == 2) {
+                croppedFaces1 = CropFace(image, threadParam.Index, true);
+            }*/
         }
 
         private Image ToPortrait(Image image) {
@@ -124,23 +185,17 @@ namespace FaceHandler {
             return imageAux;
         }
 
-        private List<Bitmap> CropFace(Image photo, int index) {
-            IImage image = ByteToIImage(photo, index);
+        private List<Bitmap> CropFace(Image photo, int index, bool delete) {
+            IImage image = ByteToIImage(imagesPath, photo, index, delete);
             List<Bitmap> facesList = new List<Bitmap>();
             long detectionTime;
             List<Rectangle> faces = new List<Rectangle>();
             List<Rectangle> eyes = new List<Rectangle>();
             int ind = 0;
-			
-			/*DetectFace.Detect(
-              image, "C:\\Users\\Administrador\\Documents\\Visual Studio 2017\\Projects\\restServer\\restServer\\restServer\\BackEnd\\haarcascade_frontalface_default.xml"
-              , "C:\\Users\\Administrador\\Documents\\Visual Studio 2017\\Projects\\restServer\\restServer\\restServer\\BackEnd\\haarcascade_eye.xml"
-              , faces, eyes,
-              out detectionTime);*/
-			  
+
             DetectFace.Detect(
-              image, "D:\\home\\site\\wwwroot\\BackEnd\\haarcascade_frontalface_default.xml"
-              , "D:\\home\\site\\wwwroot\\BackEnd\\haarcascade_eye.xml"
+              image, haarcascadePath + "haarcascade_frontalface_default.xml"
+              , haarcascadePath + "haarcascade_eye.xml"
               , faces, eyes,
               out detectionTime);
 
@@ -173,10 +228,12 @@ namespace FaceHandler {
             }
         }
 
-        private IImage ByteToIImage(Image image, int index) {
+        private IImage ByteToIImage(string path, Image image, int index, bool delete) {
             if(SaveImage(image, path + "tmpImage" + index)) {
                 IImage newImage = new UMat(path + "tmpImage" + index + ".jpg", ImreadModes.Color);
-                //File.Delete("tmpImage.jpg");
+                if(delete)
+                    File.Delete(path + "tmpImage" + index + ".jpg");
+
                 return newImage;
             }
             return null;
@@ -235,11 +292,12 @@ namespace FaceHandler {
 
             return false;
         }
-        //FileName = "C:/Python36/python.exe",
-        private string CompareFaces(string codeName, string img1, string img2) {
+
+        private string CompareFaces(string codeName, string img1, string img2, string img3, string img4) {
+            //private string CompareFaces(string codeName, string img1, string img2) {
             ProcessStartInfo start = new ProcessStartInfo {
-                FileName = "D:/home/python364x64/python.exe",
-                Arguments = string.Format(" \"{0}\" --img1={1} --img2={2}", codeName, img1, img2),
+                FileName = pythonPath,
+                Arguments = string.Format(callMatch, codeName, img1, img2, img3, img4),
                 UseShellExecute = false,// Do not use OS shell
                 CreateNoWindow = true, // We don't need new window
                 RedirectStandardOutput = true,// Any output, generated by application will be redirected back
