@@ -23,8 +23,6 @@ namespace Database {
 
     public class DatabaseHandler {
 
-        private static DatabaseHandler instance = null;
-        
         private SqlConnectionStringBuilder builder;
         SqlConnection connection;
 

@@ -11,7 +11,7 @@ namespace Presence {
                 Location location = new Location(informations.Latitude, informations.Longitude, informations.Accuracy);
                 location.CheckCoordinate();
 
-                Face face = new Face(informations.Photo);
+                Face face = new Face(informations.Photo, informations.Code);
                 
                 /*
                 if(face.IsPhotoOfPhoto(informations.Photo1, informations.Photo2)) {

@@ -17,6 +17,7 @@ namespace restServer {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             StartServices.StartDatabase();
+            //StartServices.StartFacenetServer();
         }
     }
 }
