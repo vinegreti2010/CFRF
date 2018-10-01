@@ -276,6 +276,9 @@
     <Compile Include="BackEnd\cSharp\PresenceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\CreateTables.sql" />
+    <Content Include="App_Data\Populate.sql" />
+    <Content Include="App_Data\Select.sql" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_2.jpg" />
     <Content Include="BackEnd\Python\Facenet\images\daniel-radcliffe_4.jpg" />
@@ -299,7 +302,6 @@
     <Content Include="BackEnd\Python\Facenet\pythonCodes\align\__pycache__\detect_face.cpython-36.pyc" />
     <Content Include="BackEnd\Python\Facenet\pythonCodes\facenet.py" />
     <Content Include="BackEnd\Python\Facenet\models\20170512-110547.pb" />
-    <Content Include="BackEnd\Python\Facenet\__pycache__\facenet.cpython-36.pyc" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
@@ -383,7 +385,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="BackEnd\Python\Facenet\__pycache__\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

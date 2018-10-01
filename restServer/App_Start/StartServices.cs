@@ -12,7 +12,7 @@ namespace App_Start {
 
         public static void StartFacenetServer() {
 
-            /********************************************************************************
+        /********************************************************************************
         *                                Local Debug                                    *
         ********************************************************************************/
             //string imagesPath = "C:/Users/Administrador/Desktop/ImagesTcc/";
@@ -37,10 +37,11 @@ namespace App_Start {
             Process process = null;
             try {
                 process = Process.Start(start);
-                using(StreamReader reader = process.StandardOutput) {
-                    //string stderr = process.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
-                  //  string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
-                }
+                //using(StreamReader reader = process.StandardOutput) {
+                //string stderr = process.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
+                //  string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
+                //}
+                process.WaitForExit();
             } catch {
                 process.Close();
                 throw new Exception("Erro ao abrir servidor facenet");

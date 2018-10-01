@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 
 namespace Facenet {
     public class FacenetHandler {
-
         private WebRequest webRequest;
 
         public WebRequest SendMessage(string operation, string method, FacenetRequestInformations informations) {

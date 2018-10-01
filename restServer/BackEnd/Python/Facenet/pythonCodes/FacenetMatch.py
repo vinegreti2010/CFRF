@@ -57,8 +57,21 @@ def getEmbedding(resized):
     return embedding
 
 
-def isPhotoOfPhoto(faces):
-    if np.any(faces[0]) and np.any(faces[1]) and np.any(faces[2]):
+def isPhotoOfPhoto(images):
+    comp1 = compareFaces(images[0], images[1])
+    comp2 = compareFaces(images[0], images[2])
+    resp = 0
+    if comp1 < 0 or comp2 < 0:
+        resp = -1
+
+    if comp1 < 0.27 and comp2 < 0.27:
+        resp = -2
+
+    del comp1
+    del comp2
+
+    return resp
+    '''if np.any(faces[0]) and np.any(faces[1]) and np.any(faces[2]):
         if np.array_equal(faces[0][0], faces[1][0]) and np.array_equal(faces[0][0], faces[2][0]):
             result = -2
         else:
@@ -66,7 +79,7 @@ def isPhotoOfPhoto(faces):
     else:
         result = -1
 
-    return result
+    return result'''
 
 
 def compareFaces(img1, img2):

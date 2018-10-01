@@ -3,6 +3,8 @@ using LocationHandler;
 using FaceHandler;
 using Newtonsoft.Json;
 using System;
+using Database;
+using System.Collections.Generic;
 
 namespace Presence {
     public class PresenceHandler {
@@ -10,6 +12,10 @@ namespace Presence {
             try {
                 Location location = new Location(informations.Latitude, informations.Longitude, informations.Accuracy);
                 location.CheckCoordinate();
+
+                DatabaseHandler database = Singleton<DatabaseHandler>.Instance();
+                string query = "select * from opr_defn";
+                List<object> result = database.ExecuteQuery(query);
 
                 Face face = new Face(informations.Photo, informations.Code);
                 
