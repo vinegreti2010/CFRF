@@ -262,6 +262,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="BackEnd\cSharp\ResponseException.cs" />
     <Compile Include="BackEnd\cSharp\DatabaseHandler.cs" />
     <Compile Include="BackEnd\cSharp\FacenetHandler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -276,6 +277,8 @@
     <Compile Include="BackEnd\cSharp\PresenceHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\AddDates.sql" />
+    <Content Include="App_Data\AddImage.sql" />
     <Content Include="App_Data\CreateTables.sql" />
     <Content Include="App_Data\Populate.sql" />
     <Content Include="App_Data\Select.sql" />
@@ -329,7 +332,6 @@
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="BackEnd\Python\Facenet\pythonCodes\FacenetMatch.py" />
     <Content Include="BackEnd\Python\Facenet\pythonCodes\FacenetRestServer.py" />
-    <None Include="Properties\PublishProfiles\CFRF - Web Deploy.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -346,6 +348,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Properties\PublishProfiles\CFRFApp - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

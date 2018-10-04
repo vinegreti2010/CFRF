@@ -7,16 +7,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Database;
 using Informations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Presence;
+using CFRFException;
 
 namespace restServer.Controllers {
+    public class InsertImage{
+        public string code { get; set; }
+        public string img { get; set; }
+    }
     public class CFRFController : ApiController {
         // GET api/values
-        public IEnumerable<string> Get() {
-            return new string[] { "value1", "value2" };
+        public string Get() {
+            string t = JsonConvert.SerializeObject(new ResponseException("teste", "teste").Info);
+            return t;
         }
 
         // GET api/values/5
@@ -29,42 +36,55 @@ namespace restServer.Controllers {
             int i = 0;
         }*/
 
-        /*[HttpPost]
-        public HttpResponseMessage Ex(Teste teste) {
-            string t = teste.T1;
-            if(t == "teste")
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            else
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
-        }*/
+        [HttpPut]
+        public HttpResponseMessage InsertImageOnDB([FromBody] InsertImage info) {
+            Image img = new Bitmap(info.img);
+            MemoryStream memoryStream = new MemoryStream();
+            img.Save(memoryStream, ImageFormat.Jpeg);
+            byte[] imgByte = memoryStream.ToArray();
+
+            DatabaseHandler database = Singleton<DatabaseHandler>.Instance();
+            string procName = "addimage";
+            database.InsertByProc(procName, info.code, imgByte);
+            database.InsertByProc(procName, info.code, imgByte);
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
 
         [HttpPost]
         public string ValidatePresence([FromBody] JsonInformations informations) {
             ResponseInfo response = new ResponseInfo();
             if(informations != null) {
-                PresenceHandler presence = new PresenceHandler();
-                
+                PresenceHandler presence = new PresenceHandler(informations);
+
                 try {
-                    if(presence.ValidatePresence(informations)) {
-                        response.code = "1";
-                        response.header = "Sucesso";
-                        response.message = "Presença validada com sucesso";
+                    if(presence.ValidatePresence()) {
+                        response = new ResponseInfo {
+                            header = "Sucesso",
+                            message = "Presença validada com sucesso"
+                        };
                         return JsonConvert.SerializeObject(response);
                     } else {
-                        response.code = "6";
-                        response.header = "Erro";
-                        response.message = "Presença não validada";
+                        response = new ResponseInfo {
+                            header = "Erro",
+                            message = "Não foi possível validar sua presença"
+                        };
                         return JsonConvert.SerializeObject(response);
                     }
-                } catch (Exception e) {
-                    string message = e.Message.Replace("\\", "");
-                    response = JsonConvert.DeserializeObject<ResponseInfo>(message);
+                } catch(ResponseException e) {
+                    return JsonConvert.SerializeObject(e.Info);
+                } catch {
+                    response = new ResponseInfo {
+                        header = "Erro",
+                        message = "Ocorreu um erro interno, favor entrar em contato com o suporte"
+                    };
                     return JsonConvert.SerializeObject(response);
                 }
             } else {
-                response.code = "2";
-                response.header = "Erro";
-                response.message = "Informações inválidas recebidas pelo servidor";
+                response = new ResponseInfo {
+                    header = "Erro",
+                    message = "Informações inválidas recebidas pelo servidor"
+                };
                 return JsonConvert.SerializeObject(response);
             }
         }

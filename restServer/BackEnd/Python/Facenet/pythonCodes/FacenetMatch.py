@@ -64,7 +64,7 @@ def isPhotoOfPhoto(images):
     if comp1 < 0 or comp2 < 0:
         resp = -1
 
-    if comp1 < 0.27 and comp2 < 0.27:
+    if comp1 < 0.07 and comp2 < 0.07:
         resp = -2
 
     del comp1

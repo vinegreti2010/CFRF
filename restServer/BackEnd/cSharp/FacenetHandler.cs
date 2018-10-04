@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using CFRFException;
 using Informations;
 using Newtonsoft.Json;
 
@@ -11,14 +12,8 @@ namespace Facenet {
         public WebRequest SendMessage(string operation, string method, FacenetRequestInformations informations) {
             string jSonString = JsonConvert.SerializeObject(informations);
 
-            if(String.IsNullOrEmpty(jSonString)) {
-                ResponseInfo response = new ResponseInfo {
-                    code = "4",
-                    header = "Erro",
-                    message = "Não foi possível enviar as informações para servidor de reconhecimento"
-                };
-                throw new Exception(JsonConvert.SerializeObject(response));
-            }
+            if(String.IsNullOrEmpty(jSonString)) 
+                throw new ResponseException("Erro", "Não foi possível enviar as informações para servidor de reconhecimento");
 
             try {
                 PreparaWebRequest("facenet/" + operation, method);
@@ -31,12 +26,7 @@ namespace Facenet {
 
                 return webRequest;
             } catch {
-                ResponseInfo response = new ResponseInfo {
-                    code = "4",
-                    header = "Erro",
-                    message = "Não foi possível enviar as informações para servidor de reconhecimento"
-                };
-                throw new Exception(JsonConvert.SerializeObject(response));
+                throw new ResponseException("Erro", "Não foi possível enviar as informações para servidor de reconhecimento");
             }
         }
 
@@ -47,12 +37,7 @@ namespace Facenet {
                 webRequest.Method = metodo;
                 webRequest.ContentType = "application/json; charset=utf-8";
             } catch {
-                ResponseInfo response = new ResponseInfo {
-                    code = "4",
-                    header = "Erro",
-                    message = "Servidor de reconhecimento inacessível, favor contatar o suporte"
-                };
-                throw new Exception(JsonConvert.SerializeObject(response));
+                throw new ResponseException("Erro", "Servidor de reconhecimento inacessível, favor contatar o suporte");
             }
         }
 
@@ -66,13 +51,7 @@ namespace Facenet {
                 FacenetResponseInformations responseInfo = JsonConvert.DeserializeObject<FacenetResponseInformations>(responseText);
                 return responseInfo;
             } catch {
-                ResponseInfo response = new ResponseInfo {
-                    code = "4",
-                    header = "Erro",
-                    message = "Não foi receber resopsta do servidor de reconhecimento"
-                };
-                
-                throw new Exception(JsonConvert.SerializeObject(response));
+                throw new ResponseException("Erro", "Não foi receber resopsta do servidor de reconhecimento");
             } finally {
                 webRequest.Abort();
             }

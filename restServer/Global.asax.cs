@@ -5,24 +5,29 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Threading;
 
-
 namespace restServer {
     public class WebApiApplication : System.Web.HttpApplication {
         Thread facenetServerThread = null;
+        StartServices Services;
         protected void Application_Start() {
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            StartServices.StartDatabase();
+            Services = new StartServices();
+            Services.StartDatabase();
 
-            facenetServerThread = new Thread(StartServices.StartFacenetServer);
+            facenetServerThread = new Thread(StartFacenet);
             facenetServerThread.Start();
-            //StartServices.StartFacenetServer();
         }
         protected void Application_End() {
             facenetServerThread.Abort();
+            Services.Dispose();
+        }
+
+        private void StartFacenet() {
+            Services.StartFacenetServer();
         }
     }
 }

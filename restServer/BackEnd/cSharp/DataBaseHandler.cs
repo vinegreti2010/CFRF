@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Web;
-using Informations;
-using Newtonsoft.Json;
+using CFRFException;
 
 namespace Database {
     public sealed class Singleton<T> where T : class, new() {
@@ -28,10 +23,10 @@ namespace Database {
 
         public DatabaseHandler() {
             builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "cfrfdbserver.database.windows.net";
+            builder.DataSource = "cfrfappdbserver.database.windows.net";
             builder.UserID = "vinicius";
             builder.Password = "CFRF@2018";
-            builder.InitialCatalog = "CFRFDataBase";
+            builder.InitialCatalog = "CFRFApp_db";
         }
 
         public void OpenConnection() {
@@ -50,32 +45,33 @@ namespace Database {
         public List<object> ExecuteQuery(string query) {
             try {
                 List<object> queryResult = new List<object>();
-                if(this.connection.State == System.Data.ConnectionState.Open) { 
-                    using(SqlCommand command = new SqlCommand(query, connection)) {
+                if(this.connection.State == System.Data.ConnectionState.Open) {
+                    using(SqlCommand command = new SqlCommand(query, connection) { CommandType = System.Data.CommandType.Text }) {
                         using(SqlDataReader reader = command.ExecuteReader()) {
                             while(reader.Read()) {
                                 for(int i = 0; i < reader.VisibleFieldCount; i++) {
-                                    queryResult.Add(reader.GetString(i));
+                                    queryResult.Add(reader.GetValue(i));
                                 }
                             }
                         }
                     }
                 } else {
-                    ResponseInfo response = new ResponseInfo {
-                        code = "7",
-                        header = "Erro",
-                        message = "Não foi possível se conectar ao banco de dados"
-                    };
-                    throw new Exception(JsonConvert.SerializeObject(response));
+                    throw new ResponseException("Erro", "Não foi possível se conectar ao banco de dados");
                 }
                 return queryResult;
             } catch {
-                ResponseInfo response = new ResponseInfo {
-                    code = "7",
-                    header = "Erro",
-                    message = "Não foi possível se conectar ao banco de dados"
-                };
-                throw new Exception(JsonConvert.SerializeObject(response));
+                throw new ResponseException("Erro", "Não foi possível se conectar ao banco de dados");
+            }
+        }
+        public void InsertByProc(string query, string code, byte[] image) {
+            OpenConnection();
+            SqlCommand command = new SqlCommand(query, connection) { CommandType = System.Data.CommandType.StoredProcedure };
+            command.Parameters.AddWithValue("@Code", code);
+            command.Parameters.AddWithValue("@image", image);
+            try {
+                command.ExecuteNonQuery();
+            }catch {
+                throw new ResponseException("Erro", "Não foi possível inserir imagem no banco de dados");
             }
         }
     }

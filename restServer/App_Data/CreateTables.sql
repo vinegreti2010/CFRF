@@ -6,13 +6,13 @@ CREATE TABLE opr_defn (
 );
 
 CREATE TABLE personal_data (
-  student_id		INTEGER			NOT NULL	IDENTITY(1, 1),
+  student_id		VARCHAR(12)		NOT NULL,
   name_display		VARCHAR(50),
   PRIMARY KEY(student_id)
 );
 
 CREATE TABLE term_tbl (
-  strm				INTEGER			NOT NULL,
+  strm				VARCHAR(4)		NOT NULL,
   descr				VARCHAR(20),
   begin_dt			DATE			NOT NULL,
   end_dt			DATE			NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE facility_tbl (
 );
 
 CREATE TABLE student_images (
-  student_id		INTEGER		NOT NULL,
+  student_id		VARCHAR(12)	NOT NULL,
   student_image		IMAGE		NOT NULL
   PRIMARY KEY(student_id),
   FOREIGN KEY(student_id)
@@ -44,8 +44,8 @@ CREATE TABLE student_images (
 );
 
 CREATE TABLE class_tbl (
-  class_nbr			INTEGER		NOT NULL	IDENTITY(1, 1),
-  strm				INTEGER		NOT NULL,
+  class_nbr			VARCHAR(4)	NOT NULL,
+  strm				VARCHAR(4)	NOT NULL,
   descr				VARCHAR(100),
   facility_id		INTEGER		NOT NULL,
   PRIMARY KEY(class_nbr, strm),
@@ -60,9 +60,9 @@ CREATE TABLE class_tbl (
 );
 
 CREATE TABLE stdnt_enrl (
-  student_id		INTEGER		NOT NULL,
-  class_nbr			INTEGER		NOT NULL,
-  strm				INTEGER		NOT NULL,
+  student_id		VARCHAR(12)	NOT NULL,
+  class_nbr			VARCHAR(4)	NOT NULL,
+  strm				VARCHAR(4)	NOT NULL,
   PRIMARY KEY(student_id, class_nbr, strm),
   FOREIGN KEY(student_id)
     REFERENCES personal_data(student_id)
@@ -75,9 +75,9 @@ CREATE TABLE stdnt_enrl (
 );
 
 CREATE TABLE class_attendence (
-  class_nbr			INTEGER		NOT NULL,
-  strm				INTEGER		NOT NULL,
-  student_id		INTEGER		NOT NULL,
+  class_nbr			VARCHAR(4)	NOT NULL,
+  strm				VARCHAR(4)	NOT NULL,
+  student_id		VARCHAR(12)	NOT NULL,
   attend_dt			DATE		NOT NULL,
   start_time		TIME		NOT NULL,
   end_time			TIME		NOT NULL,

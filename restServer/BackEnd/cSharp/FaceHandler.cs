@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Informations;
 using Newtonsoft.Json;
-using Database;
+using CFRFException;
 using System.Net;
 using Facenet;
 
@@ -38,7 +38,7 @@ namespace FaceHandler {
         ********************************************************************************/
         //string imagesPath = "D:/home/site/wwwroot/Images/";
 
-        public Face(byte[] photo, string studentCode) {
+        public Face(string studentCode, byte[] photo) {
             ImagesPathWithPrefix = imagesPath + studentCode;
             ListOfFaces = new List<Bitmap>();
             MemoryStream memoryStream = new MemoryStream(photo);
@@ -52,10 +52,7 @@ namespace FaceHandler {
             SaveImage(image, ImagesPathWithPrefix + "tmpImage" + 0);
         }
 
-        public bool CheckFace(byte[] photo, byte[] photo1) {
-            float distance = -10, time = -1;
-            ResponseInfo response;
-
+        public FacenetResponseInformations CheckFace(byte[] baseImage, byte[] photo, byte[] photo1) {
             Thread t1 = new Thread(new ParameterizedThreadStart(ThreadAdjsutImage));
             t1.Name = "Photos 1";
             ThreadParam param = new ThreadParam(photo, 1, AdjustBright);
@@ -66,12 +63,18 @@ namespace FaceHandler {
             param = new ThreadParam(photo1, 2, AdjustBright);
             t2.Start(param);
 
+            MemoryStream memoryStream = new MemoryStream(baseImage);
+            Image image = Bitmap.FromStream(memoryStream);
+            SaveImage(image, ImagesPathWithPrefix + "BaseImage");
+
             t1.Join();
             t2.Join();
 
+            float distance = -10, time = -1;
+
             try {
-                //distance = GetFacesDistance(ImagesPathWithPrefix + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
-                FacenetResponseInformations facenetResponse = RecognizeFace(imagesPath + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
+                FacenetResponseInformations facenetResponse = RecognizeFace(ImagesPathWithPrefix + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
+                //FacenetResponseInformations facenetResponse = RecognizeFace(imagesPath + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
 
                 distance = facenetResponse.distance;
                 time = facenetResponse.time;
@@ -79,42 +82,25 @@ namespace FaceHandler {
                 if(distance < 0.0f)
                     throw new Exception();
 
-                if(distance <= 1.1f)
+                return facenetResponse;
+
+                /*if(distance <= 1.1f)
                     return true;
 
-                return false;
-            } catch {
-                if(distance == -1f) {
-                    response = new ResponseInfo {
-                        code = "3",
-                        header = "Erro",
-                        message = "Não foi possível detectar sua face, por favor tente novamente"
-                    };
-                    throw new Exception(JsonConvert.SerializeObject(response));
-                }
-                if(distance == -2f) {
-                    response = new ResponseInfo {
-                        code = "4",
-                        header = "Erro",
-                        message = "Desculpe, não é possível validar presença com foto de outra foto"
-                    };
-                    throw new Exception(JsonConvert.SerializeObject(response));
-                }
-                response = new ResponseInfo {
-                    code = "7",
-                    header = "Erro",
-                    message = "Erro ao carregar arquivos para o reconhecimento"
-                };
-                throw new Exception(JsonConvert.SerializeObject(response));
+                return false;*/
+            } catch(Exception e) {
+                if(distance == -1f) 
+                    throw new ResponseException("Erro", "Não foi possível detectar sua face, por favor tente novamente");
+                
+                if(distance == -2f) 
+                    throw new ResponseException("Erro", "Desculpe, não é possível validar presença com foto de outra foto");
+                
+                throw new ResponseException("Erro", "Erro ao carregar arquivos para o reconhecimento");
             } finally {
                 for(int i = 0; i < 3; i++) {
                     File.Delete(ImagesPathWithPrefix + "tmpImage" + i + ".jpg");
                 }
-                //File.Delete(ImagesPathWithPrefix + "BaseImage.jpg");
-
-                /*DatabaseHandler database = Singleton<DatabaseHandler>.Instance();
-                string query = "";
-                database.ExecuteQuery(query);*/
+                File.Delete(ImagesPathWithPrefix + "BaseImage.jpg");
             }
         }
         

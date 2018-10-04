@@ -23,7 +23,6 @@ namespace Informations{
     }
 
     public class ResponseInfo {
-        public string code { get; set; }
         public string header { get; set; }
         public string message { get; set; }
     }
