@@ -31,7 +31,7 @@ namespace Facenet {
         }
 
         private void PreparaWebRequest(string operacao, string metodo) {
-            string url = "http://127.0.0.1:5000/";
+            string url = "https://facenetserver.azurewebsites.net/";
             try {
                 webRequest = WebRequest.Create(url + operacao);
                 webRequest.Method = metodo;
@@ -46,7 +46,6 @@ namespace Facenet {
                 HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
 
                 var responseText = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                //responseText = responseText.Substring(0, responseText.Length - 1);
                 responseText = responseText.Replace("}\n", "}");
                 FacenetResponseInformations responseInfo = JsonConvert.DeserializeObject<FacenetResponseInformations>(responseText);
                 return responseInfo;

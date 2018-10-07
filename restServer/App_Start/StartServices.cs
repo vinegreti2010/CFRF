@@ -11,20 +11,20 @@ namespace App_Start {
             database.OpenConnection();
         }
 
-        public void StartFacenetServer() {
+        public Process StartFacenetServer() {
             /********************************************************************************
             *                                Local Debug                                    *
             ********************************************************************************/
-            //string imagesPath = "C:/Users/Administrador/Desktop/ImagesTcc/";
+            /*//string imagesPath = "C:/Users/Administrador/Desktop/ImagesTcc/";
             string faceNetExec = "\"C:/Users/Administrador/Documents/Visual Studio 2017/Projects/restServer/restServer/restServer/BackEnd/Python/Facenet/pythonCodes/FacenetRestServer.py\"";
-            string pythonPath = "C:/Python36/python.exe";
+            string pythonPath = "C:/Python36/python.exe";*/
 
             /********************************************************************************
             *                               Azure Server                                    *
             ********************************************************************************/
-            /*//string imagesPath = "D:/home/site/wwwroot/Images/";
+            //string imagesPath = "D:/home/site/wwwroot/Images/";
             string faceNetExec = "D:/home/site/wwwroot/BackEnd/Python/Facenet/pythonCodes/FacenetRestServer.py";
-            string pythonPath = "D:/home/python364x64/python.exe";*/
+            string pythonPath = "D:/home/python364x64/python.exe";
 
             ProcessStartInfo start = new ProcessStartInfo {
                 FileName = pythonPath,
@@ -40,11 +40,12 @@ namespace App_Start {
                 //process = Process.Start(start);
                 facenetProcess = Process.Start(start);
                 //using(StreamReader reader = facenetProcess.StandardOutput) {
-                //string stderr = facenetProcess.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
-                //  string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
+                    //string stderr = facenetProcess.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
+                    //  string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
                 //}
                 //process.WaitForExit();
                 facenetProcess.WaitForExit();
+                return facenetProcess;
             } catch {
                 //process.Close();
                 facenetProcess.Close();

@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Threading;
 using Informations;
-using Newtonsoft.Json;
 using CFRFException;
 using System.Net;
 using Facenet;
@@ -24,32 +23,23 @@ public class ThreadParam {
 
 namespace FaceHandler {
     public class Face {
-        List<Bitmap> ListOfFaces;
+        List<string> ListOfFaces;
         int AdjustBright;
-        string ImagesPathWithPrefix;
 
-        /********************************************************************************
-        *                                Local Debug                                    *
-        ********************************************************************************/
-        string imagesPath = "C:/Users/Administrador/Desktop/ImagesTcc/";
-
-        /********************************************************************************
-        *                               Azure Server                                    *
-        ********************************************************************************/
-        //string imagesPath = "D:/home/site/wwwroot/Images/";
+        private readonly object insertLock = new object(); 
 
         public Face(string studentCode, byte[] photo) {
-            ImagesPathWithPrefix = imagesPath + studentCode;
-            ListOfFaces = new List<Bitmap>();
+            ListOfFaces = new List<string>();
             MemoryStream memoryStream = new MemoryStream(photo);
             Image image = Bitmap.FromStream(memoryStream);
-            image = ToPortrait(image);
             
             AdjustBright = 130 - MedBrightImage((Bitmap)image);
             if(AdjustBright > 0)
                 image = AdjustBrightness(image, (int)(AdjustBright / 3f));
 
-            SaveImage(image, ImagesPathWithPrefix + "tmpImage" + 0);
+            MemoryStream m2 = new MemoryStream();
+            image.Save(m2, ImageFormat.Jpeg);
+            ListOfFaces.Add(Convert.ToBase64String(memoryStream.ToArray()));
         }
 
         public FacenetResponseInformations CheckFace(byte[] baseImage, byte[] photo, byte[] photo1) {
@@ -63,44 +53,33 @@ namespace FaceHandler {
             param = new ThreadParam(photo1, 2, AdjustBright);
             t2.Start(param);
 
-            MemoryStream memoryStream = new MemoryStream(baseImage);
-            Image image = Bitmap.FromStream(memoryStream);
-            SaveImage(image, ImagesPathWithPrefix + "BaseImage");
-
             t1.Join();
             t2.Join();
 
             float distance = -10, time = -1;
 
             try {
-                FacenetResponseInformations facenetResponse = RecognizeFace(ImagesPathWithPrefix + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
-                //FacenetResponseInformations facenetResponse = RecognizeFace(imagesPath + "BaseImage.jpg", ImagesPathWithPrefix + "tmpImage0.jpg", ImagesPathWithPrefix + "tmpImage1.jpg", ImagesPathWithPrefix + "tmpImage2.jpg");
+                FacenetResponseInformations facenetResponse = RecognizeFace(Convert.ToBase64String(baseImage), ListOfFaces[0], ListOfFaces[1], ListOfFaces[2]);
 
                 distance = facenetResponse.distance;
                 time = facenetResponse.time;
 
                 if(distance < 0.0f)
-                    throw new Exception();
+                    throw new ResponseException("Erro", "Erro inesperado, favor entrar em contato com o supoerte");
 
                 return facenetResponse;
-
-                /*if(distance <= 1.1f)
-                    return true;
-
-                return false;*/
-            } catch(Exception e) {
-                if(distance == -1f) 
+            } catch(ResponseException e) {
+                if(distance == -1f)
                     throw new ResponseException("Erro", "Não foi possível detectar sua face, por favor tente novamente");
-                
-                if(distance == -2f) 
+
+                if(distance == -2f)
                     throw new ResponseException("Erro", "Desculpe, não é possível validar presença com foto de outra foto");
-                
+
+                throw e;
+            } catch { 
                 throw new ResponseException("Erro", "Erro ao carregar arquivos para o reconhecimento");
             } finally {
-                for(int i = 0; i < 3; i++) {
-                    File.Delete(ImagesPathWithPrefix + "tmpImage" + i + ".jpg");
-                }
-                File.Delete(ImagesPathWithPrefix + "BaseImage.jpg");
+                ListOfFaces.Clear();
             }
         }
         
@@ -109,34 +88,13 @@ namespace FaceHandler {
 
             MemoryStream memoryStream = new MemoryStream(threadParam.Photo);
             Image image = Bitmap.FromStream(memoryStream);
-            image = ToPortrait(image);
             if(threadParam.Adjust > 0)
                 image = AdjustBrightness(image, (int)(threadParam.Adjust / 3f));
 
-            if(threadParam.Index == 1) {
-                SaveImage(image, ImagesPathWithPrefix + "tmpImage" + threadParam.Index);
-            } else if(threadParam.Index == 2) {
-                SaveImage(image, ImagesPathWithPrefix + "tmpImage" + threadParam.Index);
-            }
-        }
-
-        private Image ToPortrait(Image image) {
-            Image imageAux = image;
-
-            if(imageAux.Height < imageAux.Width)
-                imageAux.RotateFlip(RotateFlipType.Rotate270FlipNone);
-
-            return imageAux;
-        }
-        private bool SaveImage(Image image, string fileName) {
-            try {
-                try {
-                    File.Delete(fileName + ".jpg");
-                } catch { }
-                image.Save(fileName + ".jpg", ImageFormat.Jpeg);
-                return true;
-            } catch {
-                return false;
+            MemoryStream m2 = new MemoryStream();
+            image.Save(m2, ImageFormat.Jpeg);
+            lock(insertLock) {
+                ListOfFaces.Add(Convert.ToBase64String(memoryStream.ToArray()));
             }
         }
 
@@ -182,13 +140,9 @@ namespace FaceHandler {
 
         public FacenetResponseInformations RecognizeFace(string baseImage, string img1, string img2, string img3) {
             FacenetHandler facenet = new FacenetHandler();
-
             FacenetRequestInformations requestInformations = new FacenetRequestInformations { baseImage = baseImage, img1 = img1, img2 = img2, img3 = img3 };
-
             WebRequest request = facenet.SendMessage("recognizeFaces", "POST", requestInformations);
-
             FacenetResponseInformations facenetResponse = facenet.GetWebResponse(request);
-
             return facenetResponse;
         }
     }

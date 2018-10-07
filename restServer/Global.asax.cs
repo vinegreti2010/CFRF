@@ -18,10 +18,13 @@ namespace restServer {
             Services = new StartServices();
             Services.StartDatabase();
 
-            facenetServerThread = new Thread(StartFacenet);
-            facenetServerThread.Start();
+            //facenetServerThread = new Thread(StartFacenet);
+            //facenetServerThread.Start();
         }
-        protected void Application_End() {
+
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+        protected void Dispose() {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             facenetServerThread.Abort();
             Services.Dispose();
         }

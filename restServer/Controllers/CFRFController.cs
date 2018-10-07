@@ -31,11 +31,6 @@ namespace restServer.Controllers {
             return "value";
         }
 
-        // POST api/values
-        /*public void Post([FromBody]string value) {
-            int i = 0;
-        }*/
-
         [HttpPut]
         public HttpResponseMessage InsertImageOnDB([FromBody] InsertImage info) {
             Image img = new Bitmap(info.img);
@@ -56,12 +51,13 @@ namespace restServer.Controllers {
             ResponseInfo response = new ResponseInfo();
             if(informations != null) {
                 PresenceHandler presence = new PresenceHandler(informations);
-
+                List<string> presenceInformations = null;
                 try {
-                    if(presence.ValidatePresence()) {
+                    presenceInformations = presence.ValidatePresence();
+                    if(presenceInformations != null) {
                         response = new ResponseInfo {
                             header = "Sucesso",
-                            message = "Presença validada com sucesso"
+                            message = presenceInformations[0] + " sua presença na aula " + presenceInformations[1] + " validada com sucesso"
                         };
                         return JsonConvert.SerializeObject(response);
                     } else {
@@ -87,14 +83,6 @@ namespace restServer.Controllers {
                 };
                 return JsonConvert.SerializeObject(response);
             }
-        }
-
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value) {
-        }
-
-        // DELETE api/values/5
-        public void Delete(int id) {
         }
     }
 }
