@@ -56,13 +56,12 @@ namespace FaceHandler {
             t1.Join();
             t2.Join();
 
-            float distance = -10, time = -1;
+            double distance = -10;
 
             try {
                 FacenetResponseInformations facenetResponse = RecognizeFace(Convert.ToBase64String(baseImage), ListOfFaces[0], ListOfFaces[1], ListOfFaces[2]);
 
                 distance = facenetResponse.distance;
-                time = facenetResponse.time;
 
                 if(distance < 0.0f)
                     throw new ResponseException("Erro", "Erro inesperado, favor entrar em contato com o supoerte");

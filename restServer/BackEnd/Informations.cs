@@ -23,7 +23,7 @@
     }
 
     public class FacenetResponseInformations {
-        public float distance { get; set; }
-        public float time { get; set; }
+        public double distance { get; set; }
+        public double time { get; set; }
     }
 }

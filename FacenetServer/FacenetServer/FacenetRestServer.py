@@ -2,6 +2,7 @@ from flask import jsonify
 from flask_restful import reqparse
 from FacenetServer import FacenetMatch
 from FacenetServer import app
+import time
 
 @app.route('/facenet', methods=['GET'])
 def teste():
@@ -18,10 +19,10 @@ def recognizeFaces():
     args = parser.parse_args()
 
     images = [args.img1, args.img2, args.img3]
-
+    start = time.time()
     distance = FacenetMatch.recognize(images, args.baseImage)
-
-    return jsonify({'distance': str(distance)})
+    elapsed_time = time.time() - start;
+    return jsonify({'distance': str(distance), 'time':str(elapsed_time)})
 
 @app.route('/facenet/generateEmbedding', methods=['POST'])
 def generateEmbedding():

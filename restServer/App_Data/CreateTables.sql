@@ -94,6 +94,8 @@ CREATE TABLE recognize_log (
 	effdt			DATETIME,
 	sucess			char(1),
 	error			VARCHAR(254),
+	elapsed_time	FLOAT,
+	faces_distance	FLOAT,
 	PRIMARY KEY(student_id, effdt)
 );
 

@@ -80,6 +80,10 @@ namespace restServer.Controllers {
                         return JsonConvert.SerializeObject(response);
                     }
                 } catch(ResponseException e) {
+                    logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
+                    logParameters.Add(new Tuple<string, object>("@Error", e.Info.message));
+                    presence.InsertLog(logParameters);
+                    logParameters.Clear();
                     return JsonConvert.SerializeObject(e.Info);
                 } catch {
                     response = new ResponseInfo {

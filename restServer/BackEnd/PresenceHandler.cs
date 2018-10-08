@@ -14,6 +14,7 @@ namespace Presence {
         List<object> queryNameImage;
         List<object> queryLocation;
         DatabaseHandler database;
+        double facesDistance, timeResponse;
         public PresenceHandler(JsonInformations informations) {
             this.Informations = informations;
             database = Singleton<DatabaseHandler>.Instance();
@@ -48,13 +49,15 @@ namespace Presence {
 
             if(!isFaceCorrect) {
                 if(exceptionRecognize != null) {
-                    InsertRecognizeLog("N", exceptionRecognize.Message);
+                    InsertRecognizeLog("N", exceptionRecognize.Message, timeResponse, facesDistance);
                     throw exceptionRecognize;
                 }
-                InsertRecognizeLog("N", "Desculpe, a foto não corresponde com a foto de referencia para este código");
+                InsertRecognizeLog("N", "Desculpe, a foto não corresponde com a foto de referencia para este código", timeResponse, facesDistance);
 
                 throw new ResponseException("Erro", "Desculpe, a foto não corresponde com a foto de referencia para este código");
             }
+
+            InsertRecognizeLog("Y", "", timeResponse, facesDistance);
 
             if(!isFacilityCorrect) {
                 if(exceptionLocation != null)
@@ -65,8 +68,7 @@ namespace Presence {
             if(!ApplyPresence(queryLocation[0], queryLocation[1], Informations.Code, queryLocation[2], queryLocation[3])){
                 throw new ResponseException("Erro", "Não foi possível atualizar sua presença no banco de dados, favor entrar em contato com o administrador");
             }
-            InsertRecognizeLog("N", exceptionRecognize.Message);
-
+            
             return new List<string>() { (string)queryNameImage[0], (string) queryLocation[4]};
         }
 
@@ -77,6 +79,9 @@ namespace Presence {
                 isFaceCorrect = true;
             else
                 isFaceCorrect = false;
+
+            facesDistance = facenetResponse.distance;
+            timeResponse = facenetResponse.time;
         }
 
         private void CheckLocation() {
@@ -117,11 +122,13 @@ namespace Presence {
             return false;
         }
 
-        private void InsertRecognizeLog(string Sucess, string Error) {
+        private void InsertRecognizeLog(string Sucess, string Error, double timeResponse, double distance) {
             List<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
             parameters.Add(new Tuple<string, object>("@Student_id", Informations.Code));
             parameters.Add(new Tuple<string, object>("@Sucess", Sucess));
             parameters.Add(new Tuple<string, object>("@Error", Error));
+            parameters.Add(new Tuple<string, object>("@Time", timeResponse));
+            parameters.Add(new Tuple<string, object>("@Distance", distance));
 
             database.ExecuteProcedure("insertRecognizeLog", parameters);
         }
