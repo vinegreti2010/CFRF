@@ -41,8 +41,8 @@ namespace LocationHandler {
             //1 minuto geodésico = 1 milha nautica = 1851.997958112 metros.
             //1 segundo geodésico = 0.016666667 minutos geodésicos = 30.866632633 metros.
             //precisao em graus => precisaoMetros / 30.866632633 -> precisaoSegundos / 60 = precisaoMinutos -> precisaoMinutos / 60 = precisaoGraus
-            //precisao em graus = precisaoMetros / 11111.98774788
-            return accuracy / 11111.98774788f;
+            //precisao em graus = precisaoMetros / 111119.877478800
+            return accuracy / 111119.877478800f;
         }
 
         private void applyAccuracy(float degreeAccuracy) {

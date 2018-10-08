@@ -20,7 +20,9 @@ SELECT *
   FROM stdnt_enrl;
 
 SELECT *
-  FROM class_attendence;
+  FROM class_attendence
+ WHERE student_id = '555555555555'
+   AND presence = 'Y'
 
 SELECT CONVERT(DATE, GETDATE()), CONVERT(TIME, GETDATE())
   FROM personal_data;
@@ -34,7 +36,11 @@ SELECT A.name_display, B.student_image
  WHERE A.student_id = 1;
 
 /*******SELECT FACILITY LOCATION AND CLASS DESCR BASED ON CURRENT CLASS********/
-SELECT B.descr, 
+SELECT C.class_nbr,
+	   C.strm,
+	   C.attend_dt,
+	   C.start_time,
+	   B.descr, 
 	   D.latitude_north_east, 
 	   D.longitude_north_east, 
 	   D.latitude_north_west, 

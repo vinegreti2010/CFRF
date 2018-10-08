@@ -40,8 +40,12 @@ namespace restServer.Controllers {
 
             DatabaseHandler database = Singleton<DatabaseHandler>.Instance();
             string procName = "addimage";
-            database.InsertByProc(procName, info.code, imgByte);
-            database.InsertByProc(procName, info.code, imgByte);
+            List<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
+
+            parameters.Add(new Tuple<string, object>("@Code", info.code));
+            parameters.Add(new Tuple<string, object>("@image", imgByte));
+
+            database.ExecuteProcedure(procName, parameters);
 
             return new HttpResponseMessage(HttpStatusCode.OK);
         }

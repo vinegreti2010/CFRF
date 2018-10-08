@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using CFRFException;
 
@@ -63,13 +64,14 @@ namespace Database {
                 throw new ResponseException("Erro", "Não foi possível se conectar ao banco de dados");
             }
         }
-        public void InsertByProc(string query, string code, byte[] image) {
+        public int ExecuteProcedure(string procedure, List<Tuple<string, object>> parameters) {
             OpenConnection();
-            SqlCommand command = new SqlCommand(query, connection) { CommandType = System.Data.CommandType.StoredProcedure };
-            command.Parameters.AddWithValue("@Code", code);
-            command.Parameters.AddWithValue("@image", image);
+            SqlCommand command = new SqlCommand(procedure, connection) { CommandType = System.Data.CommandType.StoredProcedure };
+            foreach(Tuple<string, object> param in parameters) {
+                command.Parameters.AddWithValue(param.Item1, param.Item2);
+            }
             try {
-                command.ExecuteNonQuery();
+                return command.ExecuteNonQuery();
             }catch {
                 throw new ResponseException("Erro", "Não foi possível inserir imagem no banco de dados");
             }

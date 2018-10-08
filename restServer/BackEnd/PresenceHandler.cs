@@ -28,13 +28,13 @@ namespace Presence {
             if(queryNameImage.Count == 0)
                 throw new ResponseException("Erro", "Desculpe, não existe foto cadastrada para o código inserido");
 
-            query = "SELECT B.descr, D.latitude_north_east, D.longitude_north_east, D.latitude_north_west, D.longitude_north_west, D.latitude_south_east, D.longitude_south_east, D.latitude_south_west, D.longitude_south_west FROM stdnt_enrl A INNER JOIN class_tbl B ON B.class_nbr = A.class_nbr AND B.strm = A.strm INNER JOIN class_attendence C ON C.class_nbr = A.class_nbr AND C.strm = A.strm AND C.student_id = A.student_id LEFT JOIN facility_tbl D ON D.facility_id = B.facility_id WHERE A.student_id = '" + Informations.Code + "' AND C.attend_dt = CONVERT(DATE, GETDATE()) AND CONVERT(TIME, GETDATE()) BETWEEN C.start_time AND C.end_time;";
+            query = "SELECT C.class_nbr, C.strm, C.attend_dt, C.start_time, B.descr, D.latitude_north_east, D.longitude_north_east, D.latitude_north_west, D.longitude_north_west, D.latitude_south_east, D.longitude_south_east, D.latitude_south_west, D.longitude_south_west FROM stdnt_enrl A INNER JOIN class_tbl B ON B.class_nbr = A.class_nbr AND B.strm = A.strm INNER JOIN class_attendence C ON C.class_nbr = A.class_nbr AND C.strm = A.strm AND C.student_id = A.student_id LEFT JOIN facility_tbl D ON D.facility_id = B.facility_id WHERE A.student_id = '" + Informations.Code + "' AND C.attend_dt = CONVERT(DATE, GETDATE()) AND CONVERT(TIME, GETDATE()) BETWEEN C.start_time AND C.end_time;";
             queryLocation = database.ExecuteQuery(query);
 
             if(queryLocation.Count == 0)
                 throw new ResponseException("Erro", "Desculpe, sua matrícula não foi encontrada para esse horário");
 
-            if(queryLocation.Count < 9)
+            if(queryLocation.Count < 13)
                 throw new ResponseException("Erro", "As coordenadas para a sala onde você tem aula não foram cadastradas");
 
             Thread recognizeThread = new Thread(() => SafeExecute(() => RecognizeFace(), out exceptionRecognize));
@@ -46,19 +46,23 @@ namespace Presence {
             recognizeThread.Join();
             locationThread.Join();
 
-            if(!isFaceCorrect) {
+             if(!isFaceCorrect) {
                 if(exceptionRecognize != null)
                     throw exceptionRecognize;
                 throw new ResponseException("Erro", "Desculpe, a foto não corresponde com a foto de referencia para este código");
             }
 
-            if(!isFacilityCorrect) {
+            /*if(!isFacilityCorrect) {
                 if(exceptionLocation != null)
                     throw exceptionLocation;
                 throw new ResponseException("Erro", "Desculpe, suas coordenadas não correspondem à sala onde você tem aula neste horário");
+            }*/
+
+            if(!ApplyPresence(queryLocation[0], queryLocation[1], Informations.Code, queryLocation[2], queryLocation[3])){
+                throw new ResponseException("Erro", "Não foi possível atualizar sua presença no banco de dados, favor entrar em contato com o administrador");
             }
 
-            return new List<string>() { (string)queryNameImage[0], (string) queryLocation[0]};
+            return new List<string>() { (string)queryNameImage[0], (string) queryLocation[4]};
         }
 
         private void RecognizeFace() {
@@ -73,14 +77,14 @@ namespace Presence {
         private void CheckLocation() {
             Location location = new Location(Informations.Latitude, Informations.Longitude, Informations.Accuracy);
 
-            isFacilityCorrect = location.CheckCoordinate((float)((decimal)this.queryLocation[1]),
-                                                         (float)((decimal)this.queryLocation[2]),
-                                                         (float)((decimal)this.queryLocation[3]),
-                                                         (float)((decimal)this.queryLocation[4]),
-                                                         (float)((decimal)this.queryLocation[5]),
+            isFacilityCorrect = location.CheckCoordinate((float)((decimal)this.queryLocation[5]),
                                                          (float)((decimal)this.queryLocation[6]),
                                                          (float)((decimal)this.queryLocation[7]),
-                                                         (float)((decimal)this.queryLocation[8]));
+                                                         (float)((decimal)this.queryLocation[8]),
+                                                         (float)((decimal)this.queryLocation[9]),
+                                                         (float)((decimal)this.queryLocation[10]),
+                                                         (float)((decimal)this.queryLocation[11]),
+                                                         (float)((decimal)this.queryLocation[12]));
         }
 
         private static void SafeExecute(Action action, out Exception exception) {
@@ -90,6 +94,22 @@ namespace Presence {
             } catch(Exception e) {
                 exception = e;
             }
+        }
+
+        private bool ApplyPresence(object classNbr, object strm, object code, object attendDt, object startTime) {
+            string procName = "updatePresence";
+            List<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
+
+            parameters.Add(new Tuple<string, object>("@Class_nbr", classNbr));
+            parameters.Add(new Tuple<string, object>("@Strm", strm));
+            parameters.Add(new Tuple<string, object>("@Student_id", code));
+            parameters.Add(new Tuple<string, object>("@Attend_dt", attendDt));
+            parameters.Add(new Tuple<string, object>("@Start_time", startTime));
+
+            if(database.ExecuteProcedure(procName, parameters) > 0)
+                return true;
+
+            return false;
         }
     }
 }
