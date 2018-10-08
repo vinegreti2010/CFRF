@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Database;
 using Informations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Presence;
 using CFRFException;
 
@@ -56,6 +54,7 @@ namespace restServer.Controllers {
             if(informations != null) {
                 PresenceHandler presence = new PresenceHandler(informations);
                 List<string> presenceInformations = null;
+                List<Tuple<string, object>> logParameters = new List<Tuple<string, object>>();
                 try {
                     presenceInformations = presence.ValidatePresence();
                     if(presenceInformations != null) {
@@ -63,12 +62,21 @@ namespace restServer.Controllers {
                             header = "Sucesso",
                             message = presenceInformations[0] + " sua presença na aula " + presenceInformations[1] + " validada com sucesso"
                         };
+
+                        logParameters.Add(new Tuple<string, object>("@Sucess", "Y"));
+                        logParameters.Add(new Tuple<string, object>("@Error", ""));
+                        presence.InsertLog(logParameters);
+                        logParameters.Clear();
                         return JsonConvert.SerializeObject(response);
                     } else {
                         response = new ResponseInfo {
                             header = "Erro",
                             message = "Não foi possível validar sua presença"
                         };
+                        logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
+                        logParameters.Add(new Tuple<string, object>("@Error", "Não foi possível validar sua presença"));
+                        presence.InsertLog(logParameters);
+                        logParameters.Clear();
                         return JsonConvert.SerializeObject(response);
                     }
                 } catch(ResponseException e) {
@@ -78,6 +86,10 @@ namespace restServer.Controllers {
                         header = "Erro",
                         message = "Ocorreu um erro interno, favor entrar em contato com o suporte"
                     };
+                    logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
+                    logParameters.Add(new Tuple<string, object>("@Error", "Ocorreu um erro interno, favor entrar em contato com o suporte"));
+                    presence.InsertLog(logParameters);
+                    logParameters.Clear();
                     return JsonConvert.SerializeObject(response);
                 }
             } else {

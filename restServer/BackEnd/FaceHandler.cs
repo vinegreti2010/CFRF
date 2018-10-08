@@ -91,8 +91,8 @@ namespace FaceHandler {
             if(threadParam.Adjust > 0)
                 image = AdjustBrightness(image, (int)(threadParam.Adjust / 3f));
 
-            MemoryStream m2 = new MemoryStream();
-            image.Save(m2, ImageFormat.Jpeg);
+            MemoryStream memoryStreamImageAdjusted = new MemoryStream();
+            image.Save(memoryStreamImageAdjusted, ImageFormat.Jpeg);
             lock(insertLock) {
                 ListOfFaces.Add(Convert.ToBase64String(memoryStream.ToArray()));
             }

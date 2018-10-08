@@ -88,3 +88,19 @@ CREATE TABLE class_attendence (
       ON DELETE NO ACTION
       ON UPDATE NO ACTION
 );
+
+CREATE TABLE recognize_log (
+	student_id		VARCHAR(12),
+	effdt			DATETIME,
+	sucess			char(1),
+	error			VARCHAR(254),
+	PRIMARY KEY(student_id, effdt)
+);
+
+CREATE TABLE presence_validation_log (
+	student_id		VARCHAR(12),
+	effdt			DATETIME,
+	sucess			char(1),
+	error			VARCHAR(254),
+	PRIMARY KEY(student_id, effdt)
+);

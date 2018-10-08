@@ -24,6 +24,12 @@ SELECT *
  WHERE student_id = '555555555555'
    AND presence = 'Y'
 
+SELECT *
+  FROM recognize_log;
+
+SELECT *
+  FROM presence_validation_log;
+
 SELECT CONVERT(DATE, GETDATE()), CONVERT(TIME, GETDATE())
   FROM personal_data;
 

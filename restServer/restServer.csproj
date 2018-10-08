@@ -280,6 +280,8 @@
     <Content Include="App_Data\AddDates.sql" />
     <Content Include="App_Data\AddImage.sql" />
     <Content Include="App_Data\CreateTables.sql" />
+    <Content Include="App_Data\InsertPresenceValidationLog.sql" />
+    <Content Include="App_Data\InsertRecognizeLog.sql" />
     <Content Include="App_Data\Populate.sql" />
     <Content Include="App_Data\Select.sql" />
     <Content Include="App_Data\UpdatePresence.sql" />

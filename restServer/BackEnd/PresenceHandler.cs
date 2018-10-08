@@ -46,21 +46,26 @@ namespace Presence {
             recognizeThread.Join();
             locationThread.Join();
 
-             if(!isFaceCorrect) {
-                if(exceptionRecognize != null)
+            if(!isFaceCorrect) {
+                if(exceptionRecognize != null) {
+                    InsertRecognizeLog("N", exceptionRecognize.Message);
                     throw exceptionRecognize;
+                }
+                InsertRecognizeLog("N", "Desculpe, a foto não corresponde com a foto de referencia para este código");
+
                 throw new ResponseException("Erro", "Desculpe, a foto não corresponde com a foto de referencia para este código");
             }
 
-            /*if(!isFacilityCorrect) {
+            if(!isFacilityCorrect) {
                 if(exceptionLocation != null)
                     throw exceptionLocation;
                 throw new ResponseException("Erro", "Desculpe, suas coordenadas não correspondem à sala onde você tem aula neste horário");
-            }*/
+            }
 
             if(!ApplyPresence(queryLocation[0], queryLocation[1], Informations.Code, queryLocation[2], queryLocation[3])){
                 throw new ResponseException("Erro", "Não foi possível atualizar sua presença no banco de dados, favor entrar em contato com o administrador");
             }
+            InsertRecognizeLog("N", exceptionRecognize.Message);
 
             return new List<string>() { (string)queryNameImage[0], (string) queryLocation[4]};
         }
@@ -110,6 +115,20 @@ namespace Presence {
                 return true;
 
             return false;
+        }
+
+        private void InsertRecognizeLog(string Sucess, string Error) {
+            List<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
+            parameters.Add(new Tuple<string, object>("@Student_id", Informations.Code));
+            parameters.Add(new Tuple<string, object>("@Sucess", Sucess));
+            parameters.Add(new Tuple<string, object>("@Error", Error));
+
+            database.ExecuteProcedure("insertRecognizeLog", parameters);
+        }
+
+        public void InsertLog(List<Tuple<string, object>> parameters) {
+            parameters.Add(new Tuple<string, object>("@Student_id", Informations.Code));
+            database.ExecuteProcedure("insertLog", parameters);
         }
     }
 }
