@@ -26,4 +26,10 @@
         public double distance { get; set; }
         public double time { get; set; }
     }
+    public class ImagetoDb {
+        public string img { get; set; }
+    }
+    public class ImagetoDbResponse {
+        public string hasFace { get; set; }
+    }
 }

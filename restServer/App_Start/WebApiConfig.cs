@@ -9,8 +9,14 @@ namespace restServer {
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
+                name: "RecognizeApi",
                 routeTemplate: "{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "webSiteApi",
+                routeTemplate: "{controller}/{action}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }

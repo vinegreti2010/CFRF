@@ -4,9 +4,13 @@ from FacenetServer import FacenetMatch
 from FacenetServer import app
 import time
 
-@app.route('/facenet', methods=['GET'])
-def teste():
-    return jsonify({'teste':'fdfs'})
+@app.route('/facenet/hasFace', methods=['POST'])
+def hasFace():
+    parser = reqparse.RequestParser()
+    parser.add_argument("img")
+    args = parser.parse_args()
+
+    return jsonify({'hasFace':str(FacenetMatch.hasFace(args.img))})
 
 @app.route('/facenet/recognizeFaces', methods=['POST'])
 def recognizeFaces():

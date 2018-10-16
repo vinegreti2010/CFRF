@@ -92,7 +92,7 @@ CREATE TABLE class_attendence (
 CREATE TABLE recognize_log (
 	student_id		VARCHAR(12),
 	effdt			DATETIME,
-	sucess			char(1),
+	success			char(1),
 	error			VARCHAR(254),
 	elapsed_time	FLOAT,
 	faces_distance	FLOAT,
@@ -102,7 +102,7 @@ CREATE TABLE recognize_log (
 CREATE TABLE presence_validation_log (
 	student_id		VARCHAR(12),
 	effdt			DATETIME,
-	sucess			char(1),
+	success			char(1),
 	error			VARCHAR(254),
 	PRIMARY KEY(student_id, effdt)
 );

@@ -126,3 +126,13 @@ def toPortrait(img):
         imgResult = cv2.warpAffine(img,M,(img_size[1],img_size[0]))
 
     return imgResult
+
+
+def hasFace(imageBase64):
+    img = base64ToImage(imageBase64)
+    face1 = getFace(img)
+
+    if face1:
+        return 1;
+
+    return 0;

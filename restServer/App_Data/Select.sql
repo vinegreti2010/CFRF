@@ -42,7 +42,7 @@ SELECT A.name_display, B.student_image
  WHERE A.student_id = 1;
 
 /*******SELECT FACILITY LOCATION AND CLASS DESCR BASED ON CURRENT CLASS********/
-SELECT C.class_nbr,
+SELECT c.student_id, c.class_nbr,
 	   C.strm,
 	   C.attend_dt,
 	   C.start_time,
@@ -68,8 +68,18 @@ SELECT C.class_nbr,
 			INNER JOIN
 	   facility_tbl D
 			   ON D.facility_id = B.facility_id
- WHERE A.student_id = '555555555555'
+ WHERE 1=1
+   --and A.student_id = '555555555555'
    AND C.attend_dt = CONVERT(DATE, GETDATE())
    --AND C.attend_dt = CONVERT(DATE, '20180820 19:15:00 PM')
    AND CONVERT(TIME, GETDATE()) BETWEEN C.start_time AND C.end_time
    --AND CONVERT(TIME, '20180820 19:15:00 PM') BETWEEN C.start_time AND C.end_time;
+
+SELECT TOP 10 CONVERT(DATE, effdt) AS EFFDT, COUNT(1) AS QTDE
+  FROM recognize_log
+ WHERE success = 'Y'
+ GROUP BY CONVERT(DATE, effdt)
+ ORDER BY 1 DESC;
+
+ insert into opr_defn
+ values ('vinicius', 'f09620d0eae9249660e72f65ffdca80f8e25656bdb6eff5006def6581c21c435', 'Y')

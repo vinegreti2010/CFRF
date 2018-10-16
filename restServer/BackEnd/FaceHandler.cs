@@ -141,7 +141,7 @@ namespace FaceHandler {
             FacenetHandler facenet = new FacenetHandler();
             FacenetRequestInformations requestInformations = new FacenetRequestInformations { baseImage = baseImage, img1 = img1, img2 = img2, img3 = img3 };
             WebRequest request = facenet.SendMessage("recognizeFaces", "POST", requestInformations);
-            FacenetResponseInformations facenetResponse = facenet.GetWebResponse(request);
+            FacenetResponseInformations facenetResponse = (FacenetResponseInformations)facenet.GetWebResponse<FacenetResponseInformations>(request);
             return facenetResponse;
         }
     }

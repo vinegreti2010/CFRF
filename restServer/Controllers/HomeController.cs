@@ -7,7 +7,7 @@ using System.Web.Mvc;
 namespace restServer.Controllers {
     public class HomeController : Controller {
         public ActionResult Index() {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Home";
 
             return View();
         }

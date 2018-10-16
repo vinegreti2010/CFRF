@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Web.Configuration;
 using CFRFException;
 
 namespace Database {
@@ -18,16 +19,15 @@ namespace Database {
     }
 
     public class DatabaseHandler {
-
         private SqlConnectionStringBuilder builder;
         SqlConnection connection;
 
         public DatabaseHandler() {
             builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "cfrfappdbserver.database.windows.net";
-            builder.UserID = "vinicius";
-            builder.Password = "CFRF@2018";
-            builder.InitialCatalog = "CFRFApp_db";
+            builder.DataSource = WebConfigurationManager.AppSettings["DBServer"];
+            builder.UserID = WebConfigurationManager.AppSettings["User"];
+            builder.Password = WebConfigurationManager.AppSettings["Password"];
+            builder.InitialCatalog = WebConfigurationManager.AppSettings["Database"];
         }
 
         public void OpenConnection() {

@@ -9,9 +9,9 @@ INSERT INTO facility_tbl VALUES
 ('Sala 1 Bloco 2', -25.43394508, -49.21893256, -25.43394508, -49.28372744, -25.466634252, -49.21893256, -25.466634252, -49.28372744);
 
 INSERT INTO personal_data VALUES
-('123123123123', 'Joao'),
-('111111111111', 'Maria'),
-('222222222222', 'Pietra'),
+('123123123123', 'Allan'),
+('111111111111', 'Coelho'),
+('222222222222', 'Rafael'),
 ('555555555555', 'Vinicius');
 
 INSERT INTO class_tbl VALUES
@@ -23,7 +23,8 @@ INSERT INTO stdnt_enrl VALUES
 ('222222222222', '1', 1801),
 ('123123123123', '2', 1802),
 ('111111111111', '2', 1802),
-('555555555555', '1', 1801);
+('555555555555', '1', 1801),
+('222222222222', '2', 1802);
 
 INSERT INTO class_attendence VALUES
 ('1', '1801', '222222222222', '20180205', '18:15:00 PM', '19:30:00 PM', 'Y'),
@@ -74,5 +75,6 @@ set latitude_north_east = -25.43394508
 , longitude_south_west = -49.28372744
 where facility_id = 2
 
-select *
-  from facility_tbl
+delete class_attendence
+where student_id = '111111111111'
+and class_nbr = '2'

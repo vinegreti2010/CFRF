@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Database;
 using Informations;
 using Newtonsoft.Json;
 using Presence;
 using CFRFException;
+using AddBaseImage;
 
 namespace restServer.Controllers {
     public class InsertImage{
@@ -20,7 +17,9 @@ namespace restServer.Controllers {
     public class CFRFController : ApiController {
         // GET api/values
         public string Get() {
-            string t = JsonConvert.SerializeObject(new ResponseException("teste", "teste").Info);
+            string t = JsonConvert.SerializeObject(new ResponseInfo {
+                header = "Erro",
+                message = "Não foi possível validar sua presença"});
             return t;
         }
 
@@ -31,19 +30,9 @@ namespace restServer.Controllers {
 
         [HttpPut]
         public HttpResponseMessage InsertImageOnDB([FromBody] InsertImage info) {
-            Image img = new Bitmap(info.img);
-            MemoryStream memoryStream = new MemoryStream();
-            img.Save(memoryStream, ImageFormat.Jpeg);
-            byte[] imgByte = memoryStream.ToArray();
-
-            DatabaseHandler database = Singleton<DatabaseHandler>.Instance();
-            string procName = "addimage";
-            List<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
-
-            parameters.Add(new Tuple<string, object>("@Code", info.code));
-            parameters.Add(new Tuple<string, object>("@image", imgByte));
-
-            database.ExecuteProcedure(procName, parameters);
+            //Exemplo: {"code":"111111111111", "img":"D:/home/site/wwwroot/images/coelho.jpeg"}
+            if(!AddImage.Add(info.code, info.img))
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
 
             return new HttpResponseMessage(HttpStatusCode.OK);
         }

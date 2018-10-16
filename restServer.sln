@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "restServer", "restServer\re
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "FacenetServer", "FacenetServer\FacenetServer.pyproj", "{A9F92273-6249-4FE8-9914-34AE5DE029EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "Front\FrontEnd.csproj", "{6C9CD771-C249-481B-9285-F0D1A63164F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A9F92273-6249-4FE8-9914-34AE5DE029EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F92273-6249-4FE8-9914-34AE5DE029EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F92273-6249-4FE8-9914-34AE5DE029EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C9CD771-C249-481B-9285-F0D1A63164F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C9CD771-C249-481B-9285-F0D1A63164F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C9CD771-C249-481B-9285-F0D1A63164F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C9CD771-C249-481B-9285-F0D1A63164F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

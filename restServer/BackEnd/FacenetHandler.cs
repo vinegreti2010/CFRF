@@ -9,7 +9,7 @@ namespace Facenet {
     public class FacenetHandler {
         private WebRequest webRequest;
 
-        public WebRequest SendMessage(string operation, string method, FacenetRequestInformations informations) {
+        public WebRequest SendMessage(string operation, string method, object informations) {
             string jSonString = JsonConvert.SerializeObject(informations);
 
             if(String.IsNullOrEmpty(jSonString)) 
@@ -41,13 +41,13 @@ namespace Facenet {
             }
         }
 
-        public FacenetResponseInformations GetWebResponse(WebRequest webRequest) {
+        public object GetWebResponse<T>(WebRequest webRequest) {
             try {
                 HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
 
                 var responseText = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 responseText = responseText.Replace("}\n", "}");
-                FacenetResponseInformations responseInfo = JsonConvert.DeserializeObject<FacenetResponseInformations>(responseText);
+                T responseInfo = JsonConvert.DeserializeObject<T>(responseText);
                 return responseInfo;
             } catch {
                 throw new ResponseException("Erro", "Não foi receber resopsta do servidor de reconhecimento");
