@@ -2,6 +2,7 @@ CREATE TABLE opr_defn (
   user_id			VARCHAR(20)		NOT NULL,
   password_user		VARCHAR(64)		NOT NULL,
   access			CHAR(1)			NOT NULL	DEFAULT 'N',
+  email_addr		varchar(30),
   PRIMARY KEY(user_id)
 );
 

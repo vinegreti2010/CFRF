@@ -43,7 +43,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -68,7 +77,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Pages\Charts.aspx" />
+    <Content Include="Pages\PresenceList.aspx" />
+    <Content Include="Pages\ProcessingReport.aspx" />
+    <Content Include="Pages\Rooms.aspx" />
+    <Content Include="Pages\RunClassDiary.aspx" />
+    <Content Include="Pages\SearchRooms.aspx" />
+    <Content Include="Pages\ForgotPassword.aspx" />
+    <Content Include="Pages\Home.aspx" />
     <Content Include="Pages\Login.aspx" />
+    <Content Include="Pages\UploadImages.aspx" />
     <Content Include="Scripts\css\sb-admin.css" />
     <Content Include="Scripts\css\sb-admin.min.css" />
     <Content Include="Scripts\js\sb-admin-charts.js" />
@@ -110,6 +128,69 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Charts.aspx.cs">
+      <DependentUpon>Charts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Charts.aspx.designer.cs">
+      <DependentUpon>Charts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PresenceList.aspx.cs">
+      <DependentUpon>PresenceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\PresenceList.aspx.designer.cs">
+      <DependentUpon>PresenceList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ProcessingReport.aspx.cs">
+      <DependentUpon>ProcessingReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ProcessingReport.aspx.designer.cs">
+      <DependentUpon>ProcessingReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Rooms.aspx.cs">
+      <DependentUpon>Rooms.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Rooms.aspx.designer.cs">
+      <DependentUpon>Rooms.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RunClassDiary.aspx.cs">
+      <DependentUpon>RunClassDiary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\RunClassDiary.aspx.designer.cs">
+      <DependentUpon>RunClassDiary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SearchRooms.aspx.cs">
+      <DependentUpon>SearchRooms.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\SearchRooms.aspx.designer.cs">
+      <DependentUpon>SearchRooms.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Layout.Master.cs">
+      <DependentUpon>Layout.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Models\Layout.Master.designer.cs">
+      <DependentUpon>Layout.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -117,9 +198,18 @@
     <Compile Include="Pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UploadImages.aspx.cs">
+      <DependentUpon>UploadImages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UploadImages.aspx.designer.cs">
+      <DependentUpon>UploadImages.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\DatabaseHandler.cs" />
     <Compile Include="Scripts\Encrypt.cs" />
+    <Compile Include="Scripts\FacenetHandler.cs" />
+    <Compile Include="Scripts\Informations.cs" />
+    <Compile Include="Scripts\ResponseException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -195,6 +285,8 @@
     <Content Include="Scripts\vendor\font-awesome\scss\_variables.scss" />
     <Content Include="Scripts\vendor\jquery\jquery.min.map" />
     <Content Include="Scripts\vendor\jquery\jquery.slim.min.map" />
+    <Content Include="Models\Layout.Master" />
+    <None Include="Properties\PublishProfiles\CFRFWeb - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -203,8 +295,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Reports\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,126 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Layout.master.cs" Inherits="Front.Pages.Layout" %>
+
+<!DOCTYPE html>
+
+<html>
+    <head runat="server">
+        <asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Bootstrap core CSS-->
+        <link href="../Scripts/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom fonts for this template-->
+        <link href="../Scripts/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <!-- Custom styles for this template-->
+        <link href="../Scripts/css/sb-admin.css" rel="stylesheet">
+    </head>
+
+    <body class="fixed-nav sticky-footer bg-dark" id="layout" runat="server">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <a class="navbar-brand" href="../Pages/Home.aspx">CFRF - Controle de Frequencia</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                        <a class="nav-link" href="../Pages/Home.aspx">
+                            <i class="fa fa-fw fa-home"></i>
+                            <span class="nav-link-text">Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+                        <a class="nav-link" href="../Pages/Charts.aspx">
+                            <i class="fa fa-fw fa-area-chart"></i>
+                            <span class="nav-link-text">Gráficos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Relatorios">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-file"></i>
+                            <span class="nav-link-text">Relatórios</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseComponents">
+                            <li>
+                                <a href="../Pages/RunClassDiary.aspx">Diário de Classe - Frequencia</a>
+                            </li>
+                            <li>
+                                <a href="../Pages/PresenceList.aspx">Lista de Presença</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracao">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-gear"></i>
+                            <span class="nav-link-text">Administração</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseExamplePages">
+                            <li>
+                                <a href="../Pages/UploadImages.aspx">Carregar Base de Imagens</a>
+                            </li>
+                            <li>
+                                <a href="../Pages/SearchRooms.aspx">Gerenciamento de Salas</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa fa-fw fa-sign-out"></i>Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    
+        <!--Context place-->
+        <form id="form1" runat="server">
+            <!-- Logout Modal-->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Deseja encerrar?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Clique em Sair se realmente deseja encerrar a sessão atual.</div>
+                        <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <asp:Button runat="server" ID="TryLogout" CssClass="btn btn-primary" OnClick="TryLogout_Click" Text="Sair" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-wrapper">
+                <asp:ContentPlaceHolder ID="body" runat="server">
+
+                </asp:ContentPlaceHolder>
+            </div>
+        </form>
+
+        <footer class="sticky-footer">
+          <div class="container">
+            <div class="text-center">
+              <small>Copyright © Your Website 2018</small>
+            </div>
+          </div>
+        </footer>
+        
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+
+        <script src="../Scripts/vendor/jquery/jquery.min.js"></script>
+        <script src="../Scripts/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../Scripts/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="../Scripts/js/sb-admin.min.js"></script>
+        
+    </body>
+</html>

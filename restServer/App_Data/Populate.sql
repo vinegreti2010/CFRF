@@ -12,7 +12,8 @@ INSERT INTO personal_data VALUES
 ('123123123123', 'Allan'),
 ('111111111111', 'Coelho'),
 ('222222222222', 'Rafael'),
-('555555555555', 'Vinicius');
+('555555555555', 'Vinicius'),
+('000000000000', 'Teste');
 
 INSERT INTO class_tbl VALUES
 ('1', '1801', 'Processamento de Imagens', 1),

@@ -42,16 +42,38 @@ namespace Database {
                 this.connection.Close();
         }
 
-        public List<object> ExecuteQuery(string query) {
+        //public List<object> ExecuteQuery(string query) {
+        //    try {
+        //        List<object> queryResult = new List<object>();
+        //        if(this.connection.State == System.Data.ConnectionState.Open) {
+        //            using(SqlCommand command = new SqlCommand(query, connection) { CommandType = System.Data.CommandType.Text }) {
+        //                using(SqlDataReader reader = command.ExecuteReader()) {
+        //                    while(reader.Read()) {
+        //                        for(int i = 0; i < reader.VisibleFieldCount; i++) {
+        //                            queryResult.Add(reader.GetValue(i));
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        } else {
+        //            throw new Exception("Não foi possível se conectar ao banco de dados");
+        //        }
+        //        return queryResult;
+        //    } catch(Exception e) {
+        //        throw new Exception("Não foi possível se conectar ao banco de dados");
+        //    }
+        //}
+        public List<Object[]> ExecuteQuery(string query) {
             try {
-                List<object> queryResult = new List<object>();
+                List<Object[]> queryResult = new List<Object[]>();
+                Object[] line = null;
                 if(this.connection.State == System.Data.ConnectionState.Open) {
                     using(SqlCommand command = new SqlCommand(query, connection) { CommandType = System.Data.CommandType.Text }) {
                         using(SqlDataReader reader = command.ExecuteReader()) {
                             while(reader.Read()) {
-                                for(int i = 0; i < reader.VisibleFieldCount; i++) {
-                                    queryResult.Add(reader.GetValue(i));
-                                }
+                                line = new Object[reader.FieldCount];
+                                    reader.GetValues(line);
+                                queryResult.Add(line);
                             }
                         }
                     }
@@ -59,7 +81,7 @@ namespace Database {
                     throw new Exception("Não foi possível se conectar ao banco de dados");
                 }
                 return queryResult;
-            } catch {
+            } catch(Exception e) {
                 throw new Exception("Não foi possível se conectar ao banco de dados");
             }
         }
