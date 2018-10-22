@@ -97,10 +97,41 @@
 -- WHERE a.strm = '1801'
 --   AND a.class_nbr = '1'
 
-select b.name_display
-  from stdnt_enrl a
-			inner join
+--select b.name_display
+--  from stdnt_enrl a
+--			inner join
+--	   personal_data b
+--			   on b.student_id = a.student_id
+-- WHERE a.strm = '1801'
+--   AND a.class_nbr = '1'
+
+--SELECT DISTINCT b.descr
+--	 , a.descr
+--	 , (select distinct count(1)
+--		  from class_attendence
+--		 where strm = a.strm
+--		   and class_nbr = a.class_nbr
+--		 group by student_id) as qty_dates
+--	   , convert(varchar(10), convert(date, a.attend_dt))
+--	   , convert(varchar(5), convert(time, a.start_time))
+--  FROM class_tbl a
+--			INNER JOIN
+--	   term_tbl b
+--			   ON b.strm = a.strm
+--			INNER JOIN
+--	   class_attendence c
+--			   ON c.strm = a.strm
+--			  AND c.class_nbr = a.class_nbr
+-- WHERE a.strm = '1801'
+--   AND a.class_nbr = '1'
+
+SELECT b.name_display
+	 , a.presence
+	 , convert(varchar(10), convert(date, a.attend_dt))
+	 , convert(varchar(5), convert(time, a.start_time))
+  FROM class_attendence a
+			INNER JOIN
 	   personal_data b
-			   on b.student_id = a.student_id
+			   ON b.student_id = a.student_id
  WHERE a.strm = '1801'
    AND a.class_nbr = '1'
