@@ -28,8 +28,8 @@
 --SELECT *
 --  FROM recognize_log;
 
---SELECT *
---  FROM presence_validation_log;
+SELECT *
+  FROM presence_validation_log;
 
 --SELECT CONVERT(DATE, GETDATE()), CONVERT(TIME, GETDATE())
 --  FROM personal_data;

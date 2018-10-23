@@ -52,6 +52,8 @@ namespace restServer.Controllers {
                             message = presenceInformations[0] + " sua presença na aula " + presenceInformations[1] + " validada com sucesso"
                         };
 
+                        logParameters.Add(new Tuple<string, object>("@Latitude", informations.Latitude));
+                        logParameters.Add(new Tuple<string, object>("@Longitude", informations.Longitude));
                         logParameters.Add(new Tuple<string, object>("@Sucess", "Y"));
                         logParameters.Add(new Tuple<string, object>("@Error", ""));
                         presence.InsertLog(logParameters);
@@ -62,6 +64,9 @@ namespace restServer.Controllers {
                             header = "Erro",
                             message = "Não foi possível validar sua presença"
                         };
+
+                        logParameters.Add(new Tuple<string, object>("@Latitude", informations.Latitude));
+                        logParameters.Add(new Tuple<string, object>("@Longitude", informations.Longitude));
                         logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
                         logParameters.Add(new Tuple<string, object>("@Error", "Não foi possível validar sua presença"));
                         presence.InsertLog(logParameters);
@@ -69,6 +74,9 @@ namespace restServer.Controllers {
                         return JsonConvert.SerializeObject(response);
                     }
                 } catch(ResponseException e) {
+
+                    logParameters.Add(new Tuple<string, object>("@Latitude", informations.Latitude));
+                    logParameters.Add(new Tuple<string, object>("@Longitude", informations.Longitude));
                     logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
                     logParameters.Add(new Tuple<string, object>("@Error", e.Info.message));
                     presence.InsertLog(logParameters);
@@ -79,6 +87,9 @@ namespace restServer.Controllers {
                         header = "Erro",
                         message = "Ocorreu um erro interno, favor entrar em contato com o suporte"
                     };
+
+                    logParameters.Add(new Tuple<string, object>("@Latitude", informations.Latitude));
+                    logParameters.Add(new Tuple<string, object>("@Longitude", informations.Longitude));
                     logParameters.Add(new Tuple<string, object>("@Sucess", "N"));
                     logParameters.Add(new Tuple<string, object>("@Error", "Ocorreu um erro interno, favor entrar em contato com o suporte"));
                     presence.InsertLog(logParameters);

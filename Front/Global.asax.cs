@@ -10,22 +10,22 @@ namespace Front {
             database.OpenConnection();
         }
 
-        //protected void Application_Error(object sender, EventArgs e) {
-        //    if(HttpContext.Current == null)
-        //        return;
+        protected void Application_Error(object sender, EventArgs e) {
+            if(HttpContext.Current == null)
+                return;
 
 
-        //    HttpContext context = HttpContext.Current;
+            HttpContext context = HttpContext.Current;
 
 
-        //    Exception exception = context.Server.GetLastError();
+            Exception exception = context.Server.GetLastError();
 
 
-        //    string errorInfo = "Página em manutenção, por favor, tente mais tarde";
+            string errorInfo = "Página em manutenção, por favor, tente mais tarde";
 
-        //    context.Response.Write(errorInfo);
-        //    context.Server.ClearError();
-        //}
+            context.Response.Write(errorInfo);
+            context.Server.ClearError();
+        }
 
         protected void Dispose() => database.CloseConnection();
     }

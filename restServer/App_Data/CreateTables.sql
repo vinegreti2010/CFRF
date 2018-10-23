@@ -103,6 +103,8 @@ CREATE TABLE recognize_log (
 CREATE TABLE presence_validation_log (
 	student_id		VARCHAR(12),
 	effdt			DATETIME,
+	latitude		DECIMAL(14, 10),
+	longitude		DECIMAL(14, 10), 
 	success			char(1),
 	error			VARCHAR(254),
 	PRIMARY KEY(student_id, effdt)

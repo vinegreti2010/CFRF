@@ -80,3 +80,7 @@ where facility_id = 2
 delete class_attendence
 where student_id = '111111111111'
 and class_nbr = '2'
+
+update class_tbl
+set facility_id = 19
+where class_nbr = '2'
